@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>エクバ分析 状況まとめ</title>
+<style>
+:root{--bg:#fff;--fg:#222;--mut:#666;--line:#ddd;--card:#fafafa;--ok:#1a7f37;--ok-bg:#e6f4ea;--info:#0b5cad;--info-bg:#e8f0fb;--warn:#8a6d00;--warn-bg:#fff6d6;--no:#555;--no-bg:#eee;--todo:#b42318;--todo-bg:#fde8e6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#151719;--fg:#e6e6e6;--mut:#aaa;--line:#333;--card:#1e2124;--ok:#5fd38d;--ok-bg:#163a24;--info:#7fb4ff;--info-bg:#15283f;--warn:#f0c744;--warn-bg:#3d3310;--no:#bbb;--no-bg:#2a2a2a;--todo:#ff8a80;--todo-bg:#4a1f1b}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;font-size:16px;line-height:1.65}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:8px 16px;z-index:5;display:flex;gap:6px;flex-wrap:wrap;font-size:13px}
+nav a{color:var(--fg);text-decoration:none;border:1px solid var(--line);padding:3px 8px;border-radius:12px;white-space:nowrap}
+main{max-width:900px;margin:0 auto;padding:12px 16px 60px}
+h1{font-size:22px;margin:14px 0 4px}
+h2{font-size:19px;margin:36px 0 10px;padding-bottom:4px;border-bottom:2px solid var(--fg)}
+h3{font-size:16px;margin:16px 0 6px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 8px}
+.card{border:1px solid var(--line);background:var(--card);padding:12px 14px;margin:10px 0;border-radius:6px}
+.card h3{margin:0 0 6px}
+.b{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;margin-right:6px;vertical-align:middle;font-weight:bold}
+.ok{color:var(--ok);background:var(--ok-bg)}.info{color:var(--info);background:var(--info-bg)}.warn{color:var(--warn);background:var(--warn-bg)}.no{color:var(--no);background:var(--no-bg)}.todo{color:var(--todo);background:var(--todo-bg)}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--card)}
+.num{text-align:right;white-space:nowrap}
+.big{font-size:28px;font-weight:bold;line-height:1.2}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.kpi{border:1px solid var(--line);padding:10px 12px;border-radius:6px;background:var(--card)}
+.kpi .l{font-size:13px;color:var(--mut)}
+details{border:1px dashed var(--line);padding:6px 12px;margin:8px 0;border-radius:6px}
+summary{cursor:pointer;font-weight:bold}
+ul{padding-left:20px;margin:6px 0}
+li{margin:3px 0}
+.tl{border-left:3px solid var(--line);padding-left:14px;margin:10px 0}
+.tl div{margin:8px 0}
+.tl b{display:inline-block;min-width:60px}
+code{font-size:13px;background:var(--card);padding:1px 4px;border:1px solid var(--line);border-radius:3px}
+.legend span{margin-right:10px}
+@media (max-width:600px){table{font-size:13px}th,td{padding:5px}}
+</style>
+</head>
+<body>
+<nav>
+<a href="#s1">結論</a><a href="#s2">経緯</a><a href="#s3">分かったこと</a><a href="#s4">直したこと</a><a href="#s5">いまの課題</a><a href="#s6">未解決・確認</a><a href="#s7">指標の信頼度</a><a href="#s8">データ</a><a href="#s9">所見</a><a href="#s10">資料</a>
+</nav>
+<main>
+<h1>エクバ分析プロジェクト 状況まとめ</h1>
+<p class="sub">2026-10-28 時点。レビュー第1版（10/27）から分析エージェントの返答（10/28）までを、1枚で分かる形にしたもの。印刷用ではない。</p>
+<p class="legend"><span class="b ok">確定</span>データで確かめた　<span class="b info">有力</span>向きは明確、大きさは粗い　<span class="b warn">保留</span>データ不足　<span class="b no">否定</span>データで否定された　<span class="b todo">要対応</span>誰かがやる必要がある</p>
+
+<h2 id="s1">1. いま言えること（4行）</h2>
+<div class="card">
+<ol>
+<li><b>固定で負けているのは相手がチームごと格上だから。</b> 相手は平均で約4段上、Extreme ∞ がいた11試合は全部固定。固定は固定同士でしか当たらない。固定は練習の場、上達はシャッフル（同格）で測る。</li>
+<li><b>いちばん大事だった指標「赤アラートに反応」は測り直した。</b> 前の値（68%）は、アラート前から動いていた場面も「反応」に数えていた。静止中だけで見ると約50%。「終盤に下がる」はこの値では出ない。</li>
+<li><b>シャッフルは上向き。</b> 直近20試合 50%、その前の18試合 39%。本人の階級は Extreme 10 → 8。</li>
+<li><b>課題（今日の1つ）は変えていない。</b> 根拠だった数字が入れ替わったので、次に遊んだ日の録画で目視検証をしてから決める。</li>
+</ol>
+</div>
+<div class="grid">
+<div class="kpi"><div class="l">固定の相手の階級差</div><div class="big">+3.7〜+4.2段</div><div class="l">チーム平均比。24試合</div></div>
+<div class="kpi"><div class="l">自分が低い × 格上／同格の勝率</div><div class="big">17% / 40%</div><div class="l">23試合 / 15試合</div></div>
+<div class="kpi"><div class="l">静止中の反応率</div><div class="big">50%</div><div class="l">4日分 58/115。10/27全コマ 42%</div></div>
+<div class="kpi"><div class="l">シャッフル直近20試合</div><div class="big">50%</div><div class="l">その前18試合 39%</div></div>
+<div class="kpi"><div class="l">相手の覚醒中に落ちた割合</div><div class="big">41%</div><div class="l">55/135。覚醒時間は試合の16%</div></div>
+<div class="kpi"><div class="l">数字の表まで揃った試合</div><div class="big">18 + 13</div><div class="l">10/20〜25 の18本と 10/27 の13本</div></div>
+</div>
+
+<h2 id="s2">2. 経緯</h2>
+<div class="tl">
+<div><b>10/27</b> レビュー第1版（文書2本だけから。構造の弱点と改善案）</div>
+<div><b>10/27</b> 質問票（61問）に本人が回答 → 改善計画（優先10件）→ 友人のエージェント向け手順書</div>
+<div><b>10/27-28</b> 分析エージェントが再集計と質問への回答（115KB）。階級の読み取りを本人が1日で作成</div>
+<div><b>10/28</b> レビュー第2版（実データ版）。次の指示7件</div>
+<div><b>10/28</b> 分析エージェントの返答。反応の定義は自力で修正済み、1対2仮説は弱い、相手覚醒中の撃墜41%、バックアップ完了</div>
+</div>
+
+<h2 id="s3">3. 分かったこと（判定つき）</h2>
+
+<div class="card"><h3><span class="b ok">確定</span>固定の負けは相手の階級差で説明できる</h3>
+<ul>
+<li>固定24試合：勝率21%、相手 +4.2段。シャッフル19試合：42%、−0.2段。Extreme ∞ がいた11試合は全部固定。</li>
+<li>友人M・Nの固定ランクも本人と同じ Extreme 9〜10。本人だけが低いのではなく、チームごと格上と当たっている。</li>
+<li>本人の確認：固定は固定同士でしか当たらない。対戦人口が少なく階級の幅が広がる、という推測と矛盾しない。</li>
+<li>帰結：10/19 の課題追記（「友人Mが落ちたら自分が2回目をもらうつもりで前に出る」）は格上相手の日の処方だったので取り下げ（済）。</li>
+</ul></div>
+
+<div class="card"><h3><span class="b ok">確定</span>「赤アラートに反応」の旧定義は反応を測れていなかった</h3>
+<ul>
+<li>「反応した」239回のうち180回（75%）はアラート前から動いていた場面。分析エージェントが自分で発見し、12場面の目視（正解50%）の後に定義を修正。レビュー第2版の提案と同じ考え。</li>
+<li>新定義（静止中のみ・全コマ読み）：4日分 50%、序盤43%・中盤63%・終盤51%。10/27 全コマで 42%。</li>
+<li>「終盤に反応が下がる」は新定義では出ない。ただし1日15〜48回でぶれが大きい。</li>
+<li>反応まで 0.03〜0.13秒の場面が7回。人の反応より速いので先読みか偶然。扱いは目視検証で決める。</li>
+</ul></div>
+
+<div class="card"><h3><span class="b ok">確定</span>「アラートなしの被弾」は味方の誤射</h3>
+<ul><li>録画18本で1回だけ。相手の攻撃には必ず赤アラートが出る。10/25 の「気づいていないのではない」の根拠には使えなかった。推論から除外（SKILL.md に明記済）。</li></ul></div>
+
+<div class="card"><h3><span class="b info">有力</span>「被弾」は実質「捕まった回数」。1回のダメージが大きい</h3>
+<ul><li>1.5秒以内の連続は何秒でも1回にまとまる（格闘コンボは1回）。10/25 の被弾31回のうち23回が120以上。回数より「捕まったら抜けられない（カットが来ない・コンボ完走）」が問題の可能性。表は未作成（6章）。</li></ul></div>
+
+<div class="card"><h3><span class="b info">有力</span>相手の覚醒中に落ちることが多い。ただし対照がまだ</h3>
+<ul>
+<li>自分の被撃墜の41%（55/135）、相方の35%が相手の覚醒中。覚醒時間は試合の16%なので2倍以上の集中。シャッフルに限ると自分31%・相方35%。</li>
+<li>分析エージェントの判断：自分だけの弱点ではないので課題は変えない。</li>
+<li>レビュー側の注記：相方と同じ、だけでは「普通」かどうか分からない。<b>相手が自チームの覚醒中に落ちた割合</b>（同じデータで出せる）と比べて初めて、受けすぎか相場どおりかが言える。</li>
+</ul></div>
+
+<div class="card"><h3><span class="b warn">保留</span>「相方（3000）が落ちた後、自分が2回落ちる」15試合0勝の理由</h3>
+<ul>
+<li>レビュー第2版の仮説「相方の復帰までの1対2で捕まる」は弱い：復帰まで約4秒（レビューの「十数秒」は誤り）、その間の撃墜は2/25、復帰後30秒の被ダメも試合平均と同じ。</li>
+<li>15試合の多くは録画のない 10/18・10/19 の固定（格上）。レビュー側の見立て：この型は「格上に負けた」の別名である可能性が高い。シャッフル同格に限って落ち順の型を数え直すと判定できる。</li>
+</ul></div>
+
+<div class="card"><h3><span class="b no">否定寄り</span>「後半に崩れる（疲れ）」</h3>
+<ul><li>試合番号×勝率（154試合）にきれいな形はない。10/25 の録画は最後の5試合だけで前半と比べられなかった。本人の疲れの自覚（D6）はあるが、数字では確かめられていない。</li></ul></div>
+
+<div class="card"><h3><span class="b info">有力</span>同格でも勝率は5割を切っている</h3>
+<ul><li>同格45試合で44%、自分が低い同格15試合で40%。課題は残る。ただし15試合は2試合違えば53%になる幅。固定の説明がついた今、<b>次の焦点は「シャッフル同格でどう負けているか」</b>。</li></ul></div>
+
+<h2 id="s4">4. 直したこと（変更ログ）</h2>
+<table>
+<tr><th>何を</th><th>前</th><th>後</th><th>誰が・いつ</th></tr>
+<tr><td>反応率の定義</td><td>アラート前から動いていても「反応」。0.2秒刻み</td><td>静止中のみ。アラートとブーストを全コマ（約30/秒）で読む</td><td>分析エージェント 10/28</td></tr>
+<tr><td>相手・相方の階級</td><td>保存していなかった</td><td>VS.モバイルの対戦詳細から読む（<code>vsm_badges.py</code>）。メイン73試合に付与</td><td>本人 10/28</td></tr>
+<tr><td>固定／シャッフルの分離</td><td>混ぜて集計</td><td>推移表に別表。シャッフルは直近20試合、固定は与被ダメ差・相手撃墜数・試合時間</td><td>分析エージェント 10/28</td></tr>
+<tr><td>10/19 の課題追記</td><td>「友人Mが落ちたら自分が前に出る」</td><td>取り下げ（取り消し線＋理由）</td><td>分析エージェント 10/28</td></tr>
+<tr><td>分析手順（SKILL.md）</td><td>原因の絞り方・反証候補・課題変更の線が未記載</td><td>「5b 結論を書く前のチェック」を追加（反証候補1つ、対になる数字、試合数併記、85%未満除外、課題変更の線）</td><td>分析エージェント 10/28</td></tr>
+<tr><td>アラートなしの被弾</td><td>「気づいていない」の否定に使用</td><td>誤射被弾。根拠に使わない</td><td>同上</td></tr>
+<tr><td>録画の保存</td><td>USB。10/25 の5本は消失</td><td>HDD＋YouTube 限定公開の両方。分析後は日付フォルダで約1週間保持</td><td>本人 10/28</td></tr>
+<tr><td>バックアップ</td><td>外付けSSD 1台のみ</td><td>ツールとデータを GitHub 非公開に</td><td>本人 10/28</td></tr>
+<tr><td>撃ち返しの扱い</td><td>撃っている間を「反応なし」に計上</td><td>弾数が減っていたら別枠</td><td>分析エージェント 10/25</td></tr>
+<tr><td>勝敗判定の不具合</td><td>10/25 5試合目が「勝ち」</td><td>本人確認で「負け」。コード修正</td><td>10/25</td></tr>
+<tr><td>固定の相方の記録</td><td>10/18 は相方名なし</td><td>機体から友人Nと推定、本人確認、記入</td><td>10/28</td></tr>
+</table>
+
+<h2 id="s5">5. いまの課題（本人のプレイ）</h2>
+<div class="card">
+<p><b>今日の1つ（変更なし）</b>：アラートとミニマップを試合の最後まで見る。赤アラートが出たら、まずブーストの残りを見て、半分を切っていたら着地をずらす（10/25 設定）</p>
+<ul>
+<li><b>根拠の状態</b>：設定時の根拠（反応率68%、終盤に低下、アラートなしの被弾0）は3つとも入れ替わった。残っている数字は「静止中の反応率 約50%」と「ブースト切れ直後の被弾（1試合0〜8回、ぶれ大）」。</li>
+<li><b>本人の自覚</b>（質問票 J1）：ミニマップを見ていない、赤アラートを見ていない、操作ミス。ただし D3 では「意識して見ている」とも回答。見ているのに動けないのか、見ていないのかは目視検証で分ける。</li>
+<li><b>変える条件</b>（SKILL.md 5b）：課題の数字が直近20試合で前の20試合より下がったとき、または目視で課題が外れていると分かったとき。本人の了承が要る。</li>
+<li><b>候補として浮上しているもの</b>：捕まった時のダメージ（コンボ完走・カット）、相手の覚醒への対応、同格シャッフルでの与ダメ。どれも検証前。</li>
+</ul>
+</div>
+
+<h2 id="s6">6. 未解決・確認事項</h2>
+<table>
+<tr><th>項目</th><th>状態</th><th>誰が</th><th>いつ・条件</th></tr>
+<tr><td>目視検証：静止中の反応・2対1・ブースト切れ直後の被弾 各10場面＋覚醒%の値。「反応なし」には「気づいていたか」を併記。合格7割</td><td><span class="b todo">要対応</span></td><td>本人＋エージェント</td><td>次に遊んだ日の録画で（10/27 は調整に使ったので証拠にしない）</td></tr>
+<tr><td>相手覚醒中の撃墜の対照：相手が自チーム覚醒中に落ちた割合</td><td><span class="b todo">要対応</span></td><td>エージェント</td><td>録画不要。すぐ</td></tr>
+<tr><td>シャッフル同格に限った負け方の分析（落ち順の型・与被ダメ差・捕まり表）</td><td><span class="b todo">要対応</span></td><td>エージェント</td><td>次の分析から。固定の説明がついた後の本題</td></tr>
+<tr><td>捕まった時のダメージの表（1回あたり被ダメ・120以上の割合・捕まった瞬間の相方距離・相手覚醒中か）</td><td><span class="b todo">要対応</span></td><td>エージェント</td><td>録画ありの試合。予定済み</td></tr>
+<tr><td>反応 0.03〜0.13秒の7場面の扱い</td><td><span class="b warn">保留</span></td><td>エージェント</td><td>目視検証で決める。暫定は「先読み」として分子・分母から外す</td></tr>
+<tr><td>1対2仮説（相→自→自 15試合0勝）</td><td><span class="b warn">保留</span></td><td>—</td><td>録画4場面のみ。シャッフル同格で型を数え直してから</td></tr>
+<tr><td>格闘寄りリストの根拠（13機未保存）、デスサイズヘルの矛盾、推移表を補いありに、読取率85%未満の除外</td><td><span class="b todo">要対応</span></td><td>エージェント</td><td>予定済み</td></tr>
+<tr><td>組み方（固定／シャッフル）不明の45試合</td><td><span class="b no">確定不能</span></td><td>—</td><td>10/25 以前は記録なし。今後は欠かさない</td></tr>
+<tr><td>固定で見る指標の基準値（与被ダメ差・相手撃墜数・試合時間をどこまで良いとするか）</td><td><span class="b warn">保留</span></td><td>本人</td><td>数日分たまってから</td></tr>
+<tr><td>上位プレイヤー動画で基準値（質問票 E7：やると回答）</td><td><span class="b warn">未着手</span></td><td>エージェント</td><td>録画が勝ち負け混在で揃ってから。まず1本で HUD が読めるか</td></tr>
+<tr><td>「今日の1つ」を記録ページ最上部に表示（本人は最優先と回答）</td><td><span class="b warn">状態不明</span></td><td>本人</td><td>返答に記載なし。確認したい</td></tr>
+<tr><td>タグの階層化（必須1＋自信度＋追加5項目）</td><td><span class="b warn">状態不明</span></td><td>本人</td><td>返答に記載なし。確認したい</td></tr>
+<tr><td>判断ログ（録画解析時に1日2場面「何を見て何を狙ったか」）</td><td><span class="b warn">未着手</span></td><td>本人＋エージェント</td><td>YouTube リンクが付いた日から</td></tr>
+<tr><td>使用機体を2機に絞る</td><td><span class="b warn">保留</span></td><td>本人</td><td>1か月データを見てから（本人回答）</td></tr>
+<tr><td>11/4 のアップデート</td><td><span class="b info">予定</span></td><td>エージェント</td><td>推移表に境目線。自分の機体に調整が入ったかで扱いを決める</td></tr>
+</table>
+
+<h2 id="s7">7. 指標の信頼度（現状）</h2>
+<table>
+<tr><th>指標</th><th>状態</th><th>備考</th></tr>
+<tr><td>相手・相方の階級差</td><td><span class="b ok">使える</span></td><td>メイン73試合。サブカは不可。全集計の条件に</td></tr>
+<tr><td>勝率（シャッフル直近20試合）</td><td><span class="b ok">使える</span></td><td>上達の測定はこれ。固定の勝率は使わない</td></tr>
+<tr><td>与被ダメ差</td><td><span class="b ok">使える</span></td><td>全試合。固定の目標指標に</td></tr>
+<tr><td>落ち順ミス</td><td><span class="b info">使える（管理に難）</span></td><td>格闘寄りリストの根拠が13機分未保存</td></tr>
+<tr><td>静止中の反応率</td><td><span class="b warn">要検証</span></td><td>定義は直った。目視10場面で正解率を出すまで結論に使わない</td></tr>
+<tr><td>2対1</td><td><span class="b info">検証済み（12場面）</span></td><td>役割別のみ。低コストが下がるのは定石</td></tr>
+<tr><td>ブースト切れ直後の被弾</td><td><span class="b warn">要検証</span></td><td>定義は妥当。日単位は読めない（直近20試合で）</td></tr>
+<tr><td>被弾（捕まった回数）</td><td><span class="b info">使える</span></td><td>名前と実態の差に注意。1回あたりダメージを併記</td></tr>
+<tr><td>赤アラートをしのげた</td><td><span class="b no">意味が不明確</span></td><td>点滅で分母が膨らむ。2×2に統合予定</td></tr>
+<tr><td>アラートなしの被弾（誤射被弾）</td><td><span class="b no">使わない</span></td><td>参考値のみ</td></tr>
+<tr><td>相方と離れていた</td><td><span class="b warn">未検証</span></td><td>しきい値70は分布から。役割別のみ</td></tr>
+<tr><td>覚醒%の値</td><td><span class="b warn">未検証</span></td><td>読めた割合は高いが、値の正しさは未確認</td></tr>
+<tr><td>武装推定</td><td><span class="b warn">未検証</span></td><td>本人希望で継続。3〜5場面の確認が未実施</td></tr>
+</table>
+
+<h2 id="s8">8. データの状態</h2>
+<div class="grid">
+<div class="kpi"><div class="l">記録ページ</div><div class="big">146</div><div class="l">試合（10/18〜10/26）</div></div>
+<div class="kpi"><div class="l">VS.モバイル</div><div class="big">98</div><div class="l">うち階級あり73（メイン）</div></div>
+<div class="kpi"><div class="l">録画が試合と対応</div><div class="big">29</div><div class="l">数字の表まで 18。＋10/27 の13本</div></div>
+<div class="kpi"><div class="l">組み方が分かる</div><div class="big">52 / 97</div><div class="l">10/25 から記録開始</div></div>
+</div>
+<ul>
+<li>録画は「選んで録った」のではなく「録れたもの」。10/25 は最後の5試合のみ。10/25 の録画は後日消失（バックアップ導入の契機）。</li>
+<li>サブカは直近5試合しか読めない。10/24（49試合）は VS.モバイルが5試合だけで、録画17本は対応なし。</li>
+<li>推移表と数値ノートで被弾/試合が約0.5違う（推移表が試合終了の撃墜を補っていない）。修正予定。</li>
+</ul>
+
+<h2 id="s9">9. レビュー側の所見（返答を受けて）</h2>
+<div class="card">
+<ul>
+<li><b>分析エージェントの仕事は速く、正直。</b> 反応率の問題を自分で見つけて直し、レビューの仮説（1対2）をデータで反証した。この先は外部レビューを重ねるより、SKILL.md に手順を積む方が効く（5b はその第一歩）。</li>
+<li><b>レビュー第2版の誤り2つ</b>：「vsm_raw に階級がある」（質問票の回答に依った）、「相方の復帰まで十数秒」（実際は約4秒）。どちらもゲーム・データの事実の誤りで、本人側の訂正が正しい。</li>
+<li><b>相手覚醒中の撃墜41%</b>は、対照（相手が自チーム覚醒中に落ちた割合）を出すまで「多い」とも「普通」とも言えない。相方と同率は「自分だけではない」の根拠にはなるが「問題ではない」の根拠にはならない。</li>
+<li><b>次の本題はシャッフル同格の負け方。</b> 固定の説明がついたので、課題の材料はシャッフル同格に限る。落ち順の型・与被ダメ差・捕まり表をその条件で出し、固定の格上戦は「粘り」の指標で別に見る。</li>
+<li><b>目視検証を別の日の録画でやる判断は正しい。</b> 調整に使った録画で合格しても証拠にならない。</li>
+</ul>
+</div>
+
+<h2 id="s10">10. 資料（GitHub・main）</h2>
+<table>
+<tr><th>ファイル</th><th>内容</th></tr>
+<tr><td>レビュー_2026-10-27_構造分析.md</td><td>第1版。文書だけからの構造レビュー（推測を含む）</td></tr>
+<tr><td>質問票回答_2026-10-27.md</td><td>本人の61問への回答</td></tr>
+<tr><td>改善計画_2026-10-27.md</td><td>回答を受けた優先順位（第2版で一部更新）</td></tr>
+<tr><td>手順書_友人の分析エージェント向け_2026-10-27.md</td><td>第1段の手順（完了）</td></tr>
+<tr><td>再集計_2026-10-27_分析エージェント.md</td><td>階級つき再集計（追記 10/28 が本体）</td></tr>
+<tr><td>質問への回答_2026-10-27_分析エージェント.md</td><td>指示書・コード・データの実物（115KB）</td></tr>
+<tr><td>レビュー第2版_2026-10-28_実データ版.md</td><td>実データに基づく評価。6章が第2段の指示</td></tr>
+<tr><td>第2版への返答_2026-10-28_分析エージェント.md</td><td>第2段の結果</td></tr>
+<tr><td>状況まとめ_2026-10-28.html</td><td>このページ</td></tr>
+</table>
+<p class="sub">https://github.com/melutdowner1011/GUNDAM-Analyze</p>
+</main>
+</body>
+</html>
